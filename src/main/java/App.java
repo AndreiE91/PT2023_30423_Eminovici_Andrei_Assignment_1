@@ -1,5 +1,4 @@
 import controllers.CalculatorController;
-import models.Monomial;
 import models.Polynomial;
 import models.CalculatorMain;
 import views.*;

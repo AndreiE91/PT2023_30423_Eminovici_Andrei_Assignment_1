@@ -1,26 +1,67 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.*;
 import static java.lang.Math.max;
 
 public class Operations {
 
-    public Polynomial readPolynomial(String input) {
-        //Create a new empty polynomial for storing the final result of the reading
+    public Polynomial readPolynomial(String input) throws ReadPolynomialException{
         Polynomial result = new Polynomial();
-        //Add a plus sign before any minus for splitting purposes
-        String[] splitMonomes = input.replaceAll("-", "+-").split("\\+");
+        //First and foremost remove any spaces because that can and WILL cause problems
+        if(input.contains(" ")) {
+            input = input.replace(" ", "");
+        }
+
+        if(input.charAt(0) != '-') {
+            input = "+" + input;
+        }
+        input = input.replaceAll("-", "+-");
+        String[] splitMonomes = input.split("\\+");
+
         //Iterate over each of the split substrings and extract the coefficient and exponent of each term.
-        for(int i = splitMonomes.length - 1; i >= 0; --i) {
-            //Create a monomial which will be concatenated to the final polynomial
-            Monomial tempTerm;
-            //Split again to have easily parsable substrings with coefficient and exponent
-            String[] termParts = splitMonomes[i].split("x\\^");
+        for(String splitMonome : splitMonomes) {
+            if(splitMonome.equals("")) {
+                continue;
+            }
+            int exponent = 0;
+            double coefficient = 0;
+            String[] termParts = null;
 
-            tempTerm = new Monomial(Double.parseDouble(termParts[0]), Integer.parseInt(termParts[1]));
-
-            //Add the newly extracted monome to the final result.
-            result.concatMonome(tempTerm);
+            if(splitMonome.contains("x^")) {
+                termParts = splitMonome.split("x\\^");
+                try {
+                    if (termParts[0].equals("")) {
+                        coefficient = 1.0;
+                    } else {
+                        coefficient = Double.parseDouble(termParts[0]);
+                    }
+                    exponent = Integer.parseInt(termParts[1]);
+                } catch (NullPointerException nullPointerException) {
+                    throw new ReadPolynomialException("termParts was null. Error splitting monome");
+                }
+            } else {
+                if (splitMonome.contains("x")) {
+                    termParts = splitMonome.split("x");
+                    exponent = 1;
+                    if (termParts.length != 0 && !termParts[0].equals("")) {
+                        coefficient = Double.parseDouble(termParts[0]);
+                    } else {
+                        coefficient = 1.0;
+                    }
+                } else {
+                    try {
+                        coefficient = Double.parseDouble(splitMonome);
+                        exponent = 0;
+                    } catch(NumberFormatException numberFormatException) {
+                        throw new ReadPolynomialException("Error parsing coefficient for 0 exponent term!");
+                    }
+                }
+            }
+            result.concatMonome(exponent, coefficient);
         }
         return result;
     }
@@ -28,23 +69,22 @@ public class Operations {
     public Polynomial addPolynomials(Polynomial p1, Polynomial p2) {
         //Create new polynomial for storing the final result
         Polynomial result = new Polynomial();
-        //Compute the largest size of the two polynomials in order to not skip over any term
-        int maxSize = max(p1.getMonomes().size(), p2.getMonomes().size());
 
-        // Iterate over each term in the polynomials, including possible blanks(terms with zero coefficient)
-        for(int i = 0; i < maxSize; ++i) {
-            Monomial tempMonome = null;
-            //If the exponents of the two polynomials match, simply add their coefficients
-            if(p1.getMonomes().get(i) != null && p2.getMonomes().get(i) != null) {
-                tempMonome = new Monomial(p1.getMonomes().get(i) + p2.getMonomes().get(i), i);
-            } else if(p1.getMonomes().get(i) != null) {
-                tempMonome = new Monomial(p1.getMonomes().get(i), i);
-            } else if(p2.getMonomes().get(i) != null) {
-                tempMonome = new Monomial(p2.getMonomes().get(i), i);
+        // Iterate over each term in the polynomials
+        TreeMap<Integer, Double> p1Monomes = new TreeMap<>(p1.getMonomes());
+        TreeMap<Integer, Double> p2Monomes = new TreeMap<>(p2.getMonomes());
+        for (Map.Entry<Integer, Double> monome : p1Monomes.entrySet()) {
+            if (p2Monomes.containsKey(monome.getKey())) { // If exponents match
+                result.concatMonome(monome.getKey(), monome.getValue() + p2Monomes.get(monome.getKey()));
+                p2Monomes.remove(monome.getKey());
+            } else {
+                result.concatMonome(monome.getKey(), monome.getValue());
             }
-            if(tempMonome != null) {
-                result.concatMonome(tempMonome);
-            }
+        }
+
+        // Add leftovers from p2
+        for (Map.Entry<Integer, Double> monome : p2Monomes.entrySet()) {
+            result.concatMonome(monome.getKey(), monome.getValue());
         }
         return result;
     }

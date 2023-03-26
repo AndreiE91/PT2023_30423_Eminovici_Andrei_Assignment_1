@@ -1,8 +1,6 @@
 package controllers;
 
-import models.Polynomial;
-import models.CalculatorMain;
-import models.Operations;
+import models.*;
 import views.*;
 
 import java.awt.event.ActionEvent;
@@ -25,6 +23,20 @@ public class CalculatorController {
         this.view.addIntegrateP2Listener(new IntegrateP2Listener());
         this.view.addDifferentiateP1Listener(new DifferentiateP1Listener());
         this.view.addDifferentiateP2Listener(new DifferentiateP2Listener());
+        this.view.addClearP1Listener(e -> {
+                    this.view.getTextAreaPoly1().setText(null);
+            }
+        );
+        this.view.addClearP2Listener(e -> {
+                    this.view.getTextAreaPoly2().setText(null);
+            }
+        );
+        this.view.addSwapOrderListener(e -> {
+                    String temp = this.view.getTextAreaPoly1().getText();
+                    this.view.getTextAreaPoly1().setText(this.view.getTextAreaPoly2().getText());
+                    this.view.getTextAreaPoly2().setText(temp);
+            }
+        );
     }
 
     class AdditionListener implements ActionListener {
@@ -34,16 +46,26 @@ public class CalculatorController {
 
             try {
                 Operations operations = new Operations();
+                if(view.getTextAreaPoly1().getText().isEmpty() || view.getTextAreaPoly2().getText().isEmpty()) {
+                    throw new NullInputException("Empty input text");
+                }
                 Polynomial p1 = operations.readPolynomial(view.getTextAreaPoly1().getText());
 
                 Polynomial p2 = operations.readPolynomial(view.getTextAreaPoly2().getText());
 
                 Polynomial additionResult = operations.addPolynomials(p1, p2);
 
+
                 view.getTextAreaResult().setText(additionResult.toString());
             }
+            catch (ReadPolynomialException readEx) {
+                view.showErrorMessage("Error reading polynomial!");
+            }
+            catch(NullInputException nullInputException) {
+                view.showErrorMessage(nullInputException.getMessage());
+            }
             catch (Exception ex) {
-                view.showErrorMessage("Error!");
+                view.showErrorMessage("An uncategorized error has occured!");
             }
         }
     }

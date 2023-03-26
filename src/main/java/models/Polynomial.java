@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class Polynomial  {
@@ -10,7 +12,7 @@ public class Polynomial  {
 
     public Polynomial(String name) {
         this.name = name;
-        this.monomes = new TreeMap<Integer, Double>();
+        this.monomes = new TreeMap<Integer, Double>(Collections.reverseOrder());
     }
 
     public Polynomial(TreeMap<Integer, Double> monomes) {
@@ -18,7 +20,7 @@ public class Polynomial  {
     }
 
     public Polynomial() {
-        this.monomes = new TreeMap<Integer, Double>();
+        this.monomes = new TreeMap<Integer, Double>(Collections.reverseOrder());
     }
 
     public String getName() {
@@ -37,27 +39,48 @@ public class Polynomial  {
         this.monomes = monomes;
     }
 
-    public void concatMonome(Monomial monome) {
-        monomes.put(monome.getExponent(), monome.getCoefficient());
+    public void concatMonome(int exponent, double coefficient) {
+        monomes.put(exponent, coefficient);
     }
 
     public String toString() {
-        String result = "";
-        for(int i = monomes.size() - 1; i >= 0; --i) {
-            Double coefficient = monomes.get(i);
+        StringBuilder result = new StringBuilder();
+        for(Map.Entry<Integer, Double> monome : monomes.entrySet()) {
+            double coefficient = monome.getValue();
+            int exponent = monome.getKey();
+
             //Remove plus sign if negative term
-            if(coefficient < 0 && i != monomes.size() - 1) {
-                result = result.substring(0, result.length() - 1);
+            if(coefficient < 0 && !result.isEmpty()) {
+                result = new StringBuilder(result.substring(0, result.length() - 1));
             }
-            if(coefficient == null) {
-                continue;
+            String tempString;
+            if(coefficient == 1.0) {
+                tempString = "x^";
+            } else if(coefficient == 0.0){
+                if(exponent != 0) {
+                    tempString = "0";
+                } else {
+                    tempString = "";
+                }
+            } else {
+                tempString = coefficient + "x^";
             }
-            String tempString = coefficient.toString() + "x^" + i;
-            result += tempString;
-            if(i != 0) {
-                result += "+";
+            if(exponent == 1) {
+                tempString = tempString.substring(0, tempString.length() - 1);
+            } else if(exponent == 0){
+                if(coefficient != 1) {
+                    tempString = tempString.substring(0, tempString.length() - 2);
+                } else {
+                    tempString = "1.0";
+                }
+            } else {
+                tempString += monome.getKey();
             }
+            result.append(tempString);
+            result.append("+");
         }
-        return result;
+        //Remove last plus sign which leads to no term
+        result = new StringBuilder(result.substring(0, result.length() - 1));
+        return result.toString();
     }
 }

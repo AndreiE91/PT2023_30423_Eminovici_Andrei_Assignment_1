@@ -10,17 +10,20 @@ public class ViewMain extends JFrame {
 	private JFrame frame = new JFrame();
 	private JLabel labelTitle = new JLabel("Polynomial Calculator");
 	private JLabel labelDescription0 = new JLabel("Input syntax: ax^n+bx^n-1+...+px^1+qx^0");
-	private JLabel labelDescription1 = new JLabel("-descending exponent order");
+	private JLabel labelDescription1 = new JLabel("-coefficients are real numbers");
 	private JLabel labelPoly1 = new JLabel("Polynomial 1:");
 	private JLabel labelPoly2 = new JLabel("Polynomial 2:");
 	private JTextField textAreaPoly1 = new JTextField();
 	private JTextField textAreaPoly2 = new JTextField();
-	private JLabel labelDescription2 = new JLabel("-positive integer exponent");
-	private JLabel labelResultText = new JLabel("x^2+2x+1");
+	private JLabel labelDescription2 = new JLabel("-exponents are positive integers");
+	private JLabel labelResultText = new JLabel("");
 	private JLabel labelResult = new JLabel("Result:");
-	private JLabel labelDescription3 = new JLabel("-real number coefficient");
+	private JLabel labelDescription3 = new JLabel("-exponents can be in any order");
 	private JButton buttonAddition = new JButton("Add");
 	private JButton buttonSubtraction = new JButton("Subtract");
+
+	private JButton buttonClearP1 = new JButton("Clear");
+	private JButton buttonClearP2 = new JButton("Clear");
 	private JButton buttonMultiplication = new JButton("Multiply");
 	private JButton buttonDivision = new JButton("Divide");
 	private JButton buttonIntegrateP1 = new JButton("Integrate P1");
@@ -58,6 +61,8 @@ public class ViewMain extends JFrame {
 		frame.getContentPane().add(buttonSwapOrder);
 		frame.getContentPane().add(buttonIntegrateP2);
 		frame.getContentPane().add(buttonDifferentiateP2);
+		frame.getContentPane().add(buttonClearP1);
+		frame.getContentPane().add(buttonClearP2);
 
 		labelTitle.setBounds(40, 33, 436, 51);
 		labelTitle.setFont(new Font("Vivaldi", Font.BOLD, 50));
@@ -75,19 +80,28 @@ public class ViewMain extends JFrame {
 		labelPoly1.setHorizontalAlignment(SwingConstants.CENTER);
 		labelPoly1.setFont(new Font("Tahoma", Font.BOLD, 20));
 
-		textAreaPoly1.setBounds(205, 132, 633, 51);
+		textAreaPoly1.setBounds(205, 132, 558, 51);
+		textAreaPoly1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+
+		buttonClearP1.setFont(new Font("Tahoma", Font.BOLD, 15));
+		buttonClearP1.setBounds(761, 132, 75, 50);
 
 		labelPoly2.setBounds(0, 188, 195, 56);
 		labelPoly2.setHorizontalAlignment(SwingConstants.CENTER);
 		labelPoly2.setFont(new Font("Tahoma", Font.BOLD, 20));
 
-		textAreaPoly2.setBounds(205, 188, 633, 56);
+		textAreaPoly2.setBounds(205, 188, 558, 56);
+		textAreaPoly2.setFont(new Font("Tahoma", Font.PLAIN, 20));
+
+		buttonClearP2.setFont(new Font("Tahoma", Font.BOLD, 15));
+		buttonClearP2.setBounds(761, 188, 75, 55);
 
 		labelDescription2.setHorizontalAlignment(SwingConstants.LEFT);
 		labelDescription2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		labelDescription2.setBounds(517, 61, 279, 15);
 
 		labelResultText.setBounds(205, 266, 633, 56);
+		labelResultText.setFont(new Font("Tahoma", Font.PLAIN, 20));
 
 		labelResult.setHorizontalAlignment(SwingConstants.CENTER);
 		labelResult.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -243,6 +257,38 @@ public class ViewMain extends JFrame {
 		this.buttonSubtraction = buttonSubtraction;
 	}
 
+	public JLabel getLabelResultText() {
+		return labelResultText;
+	}
+
+	public void setLabelResultText(JLabel labelResultText) {
+		this.labelResultText = labelResultText;
+	}
+
+	public JButton getButtonClearP1() {
+		return buttonClearP1;
+	}
+
+	public void setButtonClearP1(JButton buttonClearP1) {
+		this.buttonClearP1 = buttonClearP1;
+	}
+
+	public JButton getButtonClearP2() {
+		return buttonClearP2;
+	}
+
+	public void setButtonClearP2(JButton buttonClearP2) {
+		this.buttonClearP2 = buttonClearP2;
+	}
+
+	public JButton getButtonIntegrateP1() {
+		return buttonIntegrateP1;
+	}
+
+	public void setButtonIntegrateP1(JButton buttonIntegrateP1) {
+		this.buttonIntegrateP1 = buttonIntegrateP1;
+	}
+
 	public JButton getButtonMultiplication() {
 		return buttonMultiplication;
 	}
@@ -309,6 +355,14 @@ public class ViewMain extends JFrame {
 
 	public void addSwapOrderListener(ActionListener actionListener) {
 		buttonSwapOrder.addActionListener(actionListener);
+	}
+
+	public void addClearP1Listener(ActionListener actionListener) {
+		buttonClearP1.addActionListener(actionListener);
+	}
+
+	public void addClearP2Listener(ActionListener actionListener) {
+		buttonClearP2.addActionListener(actionListener);
 	}
 
 	public void addAdditionListener(ActionListener actionListener) {
