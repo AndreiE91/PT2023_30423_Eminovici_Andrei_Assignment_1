@@ -56,11 +56,14 @@ public class Polynomial  {
             String tempString;
             if(coefficient == 1.0) {
                 tempString = "x^";
+            } else if(coefficient == -1.0) {
+                tempString = "-x^";
             } else if(coefficient == 0.0){
                 if(exponent != 0) {
                     tempString = "0";
                 } else {
                     tempString = "";
+                    continue;
                 }
             } else {
                 tempString = coefficient + "x^";
@@ -81,6 +84,9 @@ public class Polynomial  {
         }
         //Remove last plus sign which leads to no term
         result = new StringBuilder(result.substring(0, result.length() - 1));
+        if(result.isEmpty()) {
+            result.append("0");
+        }
         return result.toString();
     }
 }

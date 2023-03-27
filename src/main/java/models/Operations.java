@@ -70,7 +70,7 @@ public class Operations {
         //Create new polynomial for storing the final result
         Polynomial result = new Polynomial();
 
-        // Iterate over each term in the polynomials
+        // Iterate over each term in the first polynomial
         TreeMap<Integer, Double> p1Monomes = new TreeMap<>(p1.getMonomes());
         TreeMap<Integer, Double> p2Monomes = new TreeMap<>(p2.getMonomes());
         for (Map.Entry<Integer, Double> monome : p1Monomes.entrySet()) {
@@ -85,6 +85,29 @@ public class Operations {
         // Add leftovers from p2
         for (Map.Entry<Integer, Double> monome : p2Monomes.entrySet()) {
             result.concatMonome(monome.getKey(), monome.getValue());
+        }
+        return result;
+    }
+
+    public Polynomial subtractPolynomials(Polynomial p1, Polynomial p2) {
+        //Create new polynomial for storing the final result
+        Polynomial result = new Polynomial();
+
+        // Iterate over each term in the first polynomial
+        TreeMap<Integer, Double> p1Monomes = new TreeMap<>(p1.getMonomes());
+        TreeMap<Integer, Double> p2Monomes = new TreeMap<>(p2.getMonomes());
+        for (Map.Entry<Integer, Double> monome : p1Monomes.entrySet()) {
+            if (p2Monomes.containsKey(monome.getKey())) { // If exponents match
+                result.concatMonome(monome.getKey(), monome.getValue() - p2Monomes.get(monome.getKey()));
+                p2Monomes.remove(monome.getKey());
+            } else {
+                result.concatMonome(monome.getKey(), monome.getValue());
+            }
+        }
+
+        // Subtract leftovers from p2
+        for (Map.Entry<Integer, Double> monome : p2Monomes.entrySet()) {
+            result.concatMonome(monome.getKey(), -1 * monome.getValue());
         }
         return result;
     }

@@ -1,22 +1,39 @@
 package views;
 
+import models.ContouredJLabel;
+import models.WhiteOutlineLabel;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class ViewMain extends JFrame {
 	private JFrame frame = new JFrame();
-	private JLabel labelTitle = new JLabel("Polynomial Calculator");
+	private Clip clip;
+	private ImageIcon imageLambo = new ImageIcon("Lambo.png");
+	private JLabel labelLambo = new JLabel(imageLambo);
+
+	private ImageIcon imageLambo2 = new ImageIcon("Lambo2.jpg");
+	private JLabel labelLambo2 = new JLabel(imageLambo2);
+	private WhiteOutlineLabel labelTitle = new WhiteOutlineLabel("Polynomial Calculator");
 	private JLabel labelDescription0 = new JLabel("Input syntax: ax^n+bx^n-1+...+px^1+qx^0");
 	private JLabel labelDescription1 = new JLabel("-coefficients are real numbers");
 	private JLabel labelPoly1 = new JLabel("Polynomial 1:");
 	private JLabel labelPoly2 = new JLabel("Polynomial 2:");
 	private JTextField textAreaPoly1 = new JTextField();
 	private JTextField textAreaPoly2 = new JTextField();
+
+	private ImageIcon imageResultVisibility = new ImageIcon("ResultVisibility.jpg");
+	private JLabel labelResultVisibility = new JLabel(imageResultVisibility);
 	private JLabel labelDescription2 = new JLabel("-exponents are positive integers");
-	private JLabel labelResultText = new JLabel("");
+	private ContouredJLabel labelResultText = new ContouredJLabel("");
 	private JLabel labelResult = new JLabel("Result:");
 	private JLabel labelDescription3 = new JLabel("-exponents can be in any order");
 	private JButton buttonAddition = new JButton("Add");
@@ -32,6 +49,9 @@ public class ViewMain extends JFrame {
 	private JButton buttonSwapOrder = new JButton("Swap order");
 	private JButton buttonIntegrateP2 = new JButton("Integrate P2");
 	private JButton buttonDifferentiateP2 = new JButton("Differentiate P2");
+	private JButton buttonStonkMode = new JButton("Stonk: OFF");
+	private static boolean stonkMode = false;
+
 
 	public ViewMain() {
 		frame.setTitle("Polynomial Calculator");
@@ -41,6 +61,7 @@ public class ViewMain extends JFrame {
 
 		frame.getContentPane().setLayout(null);
 		frame.getContentPane().add(labelTitle);
+		frame.getContentPane().add(buttonStonkMode);
 		frame.getContentPane().add(labelDescription0);
 		frame.getContentPane().add(labelDescription1);
 		frame.getContentPane().add(labelPoly1);
@@ -63,6 +84,10 @@ public class ViewMain extends JFrame {
 		frame.getContentPane().add(buttonDifferentiateP2);
 		frame.getContentPane().add(buttonClearP1);
 		frame.getContentPane().add(buttonClearP2);
+		frame.getContentPane().add(labelLambo);
+		frame.getContentPane().add(labelResultVisibility);
+		frame.getContentPane().add(labelLambo2);
+
 
 		labelTitle.setBounds(40, 33, 436, 51);
 		labelTitle.setFont(new Font("Vivaldi", Font.BOLD, 50));
@@ -71,6 +96,18 @@ public class ViewMain extends JFrame {
 		labelDescription0.setBounds(517, 11, 289, 15);
 		labelDescription0.setHorizontalAlignment(SwingConstants.LEFT);
 		labelDescription0.setFont(new Font("Tahoma", Font.PLAIN, 12));
+
+		labelLambo.setBounds(40, 7, 436, 171);
+		labelLambo.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelLambo.setVisible(false);
+
+		labelLambo2.setBounds(180, 180, 640, 274);
+		labelLambo2.setHorizontalAlignment(SwingConstants.LEFT);
+		labelLambo2.setVisible(false);
+
+		labelResultVisibility.setBounds(205, 266, 600, 56);
+		labelResultVisibility.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+		labelResultVisibility.setVisible(false);
 
 		labelDescription1.setBounds(517, 36, 279, 15);
 		labelDescription1.setHorizontalAlignment(SwingConstants.LEFT);
@@ -101,7 +138,9 @@ public class ViewMain extends JFrame {
 		labelDescription2.setBounds(517, 61, 279, 15);
 
 		labelResultText.setBounds(205, 266, 633, 56);
-		labelResultText.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		labelResultText.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		labelResultText.setStrokeColor(Color.BLACK);
+		labelResultText.setFillColor(Color.WHITE);
 
 		labelResult.setHorizontalAlignment(SwingConstants.CENTER);
 		labelResult.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -142,7 +181,62 @@ public class ViewMain extends JFrame {
 		buttonDifferentiateP2.setFont(new Font("Tahoma", Font.BOLD, 13));
 		buttonDifferentiateP2.setBounds(646, 397, 139, 51);
 
+		buttonStonkMode.setFont(new Font("Tahoma", Font.BOLD, 6));
+		buttonStonkMode.setBounds(805, 425, 75, 25);
+
 		frame.setVisible(true);
+	}
+
+	public Clip getClip() {
+		return clip;
+	}
+
+	public void setClip(Clip clip) {
+		this.clip = clip;
+	}
+
+	public JButton getButtonStonkMode() {
+		return buttonStonkMode;
+	}
+
+	public void setButtonStonkMode(JButton buttonStonkMode) {
+		this.buttonStonkMode = buttonStonkMode;
+	}
+
+	public static boolean isStonkMode() {
+		return stonkMode;
+	}
+
+	public ImageIcon getImageLambo() {
+		return imageLambo;
+	}
+
+	public void setImageLambo(ImageIcon imageLambo) {
+		this.imageLambo = imageLambo;
+	}
+
+	public JLabel getLabelLambo() {
+		return labelLambo;
+	}
+
+	public void setLabelLambo(JLabel labelLambo) {
+		this.labelLambo = labelLambo;
+	}
+
+	public ImageIcon getImageLambo2() {
+		return imageLambo2;
+	}
+
+	public void setImageLambo2(ImageIcon imageLambo2) {
+		this.imageLambo2 = imageLambo2;
+	}
+
+	public JLabel getLabelLambo2() {
+		return labelLambo2;
+	}
+
+	public void setLabelLambo2(JLabel labelLambo2) {
+		this.labelLambo2 = labelLambo2;
 	}
 
 	public JFrame getFrame() {
@@ -157,7 +251,7 @@ public class ViewMain extends JFrame {
 		return labelTitle;
 	}
 
-	public void setLabelTitle(JLabel labelTitle) {
+	public void setLabelTitle(WhiteOutlineLabel labelTitle) {
 		this.labelTitle = labelTitle;
 	}
 
@@ -221,7 +315,7 @@ public class ViewMain extends JFrame {
 		return labelResultText;
 	}
 
-	public void setTextAreaResult(JLabel labelResultText) {
+	public void setTextAreaResult(ContouredJLabel labelResultText) {
 		this.labelResultText = labelResultText;
 	}
 
@@ -261,7 +355,7 @@ public class ViewMain extends JFrame {
 		return labelResultText;
 	}
 
-	public void setLabelResultText(JLabel labelResultText) {
+	public void setLabelResultText(ContouredJLabel labelResultText) {
 		this.labelResultText = labelResultText;
 	}
 
@@ -337,6 +431,22 @@ public class ViewMain extends JFrame {
 		this.buttonSwapOrder = buttonSwapOrder;
 	}
 
+	public ImageIcon getImageResultVisibility() {
+		return imageResultVisibility;
+	}
+
+	public void setImageResultVisibility(ImageIcon imageResultVisibility) {
+		this.imageResultVisibility = imageResultVisibility;
+	}
+
+	public JLabel getLabelResultVisibility() {
+		return labelResultVisibility;
+	}
+
+	public void setLabelResultVisibility(JLabel labelResultVisibility) {
+		this.labelResultVisibility = labelResultVisibility;
+	}
+
 	public JButton getButtonIntegrateP2() {
 		return buttonIntegrateP2;
 	}
@@ -396,6 +506,10 @@ public class ViewMain extends JFrame {
 	public void addDifferentiateP2Listener(ActionListener actionListener) {
 		buttonDifferentiateP2.addActionListener(actionListener);
 	}
+
+	public void addStonkListener(ActionListener actionListener) {
+		buttonStonkMode.addActionListener(actionListener);
+	}
 	public void refresh() {
 
 	}
@@ -407,5 +521,61 @@ public class ViewMain extends JFrame {
 	public void showMessage(String message) {
 		JOptionPane.showMessageDialog(this, message, "",JOptionPane.INFORMATION_MESSAGE);
 		refresh();
+	}
+
+	public void setStonkMode(boolean stonk) {
+		if(stonk) {
+			buttonStonkMode.setText("Stonk: ON");
+			labelLambo.setVisible(true);
+			labelLambo2.setVisible(true);
+			labelResultVisibility.setVisible(true);
+			labelTitle.setForeground(Color.WHITE);
+			labelPoly1.setForeground(Color.WHITE);
+			playClip("money.wav");
+		} else {
+			buttonStonkMode.setText("Stonk: OFF");
+			labelLambo.setVisible(false);
+			labelLambo2.setVisible(false);
+			labelResultVisibility.setVisible(false);
+			labelTitle.setForeground(Color.BLACK);
+			labelPoly1.setForeground(Color.BLACK);
+			stopClip();
+		}
+		stonkMode = !stonkMode;
+	}
+
+	public static void playSound(String soundFile) {
+		try {
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundFile).getAbsoluteFile());
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioInputStream);
+			clip.start();
+		} catch(Exception ex) {
+			System.out.println("Error playing sound.");
+			ex.printStackTrace();
+		}
+	}
+
+	public void playClip(String soundFile) {
+		try {
+			if (clip != null && clip.isRunning()) {
+				clip.stop();
+			}
+
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundFile).getAbsoluteFile());
+			clip = AudioSystem.getClip();
+			clip.open(audioInputStream);
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
+			clip.start();
+		} catch(Exception ex) {
+			System.out.println("Error playing sound.");
+			ex.printStackTrace();
+		}
+	}
+
+	public void stopClip() {
+		if (clip != null && clip.isRunning()) {
+			clip.stop();
+		}
 	}
 }
