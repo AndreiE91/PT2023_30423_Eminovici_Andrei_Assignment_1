@@ -48,9 +48,15 @@ public class Polynomial  {
         for(Map.Entry<Integer, Double> monome : monomes.entrySet()) {
             double coefficient = monome.getValue();
             int exponent = monome.getKey();
+            if(coefficient == 0 && exponent == 0) {
+                result.append("+");
+                continue;
+            }
+//            System.out.println(coefficient);
+//            System.out.println(exponent);
 
             //Remove plus sign if negative term
-            if(coefficient < 0 && !result.isEmpty()) {
+            if(coefficient <= 0 && !result.isEmpty()) {
                 result = new StringBuilder(result.substring(0, result.length() - 1));
             }
             String tempString;
@@ -59,31 +65,35 @@ public class Polynomial  {
             } else if(coefficient == -1.0) {
                 tempString = "-x^";
             } else if(coefficient == 0.0){
-                if(exponent != 0) {
-                    tempString = "0";
-                } else {
-                    tempString = "";
-                    continue;
-                }
-            } else {
-                tempString = coefficient + "x^";
+                tempString = "";
             }
-            if(exponent == 1) {
+             else {
+                String formattedValue = String.format("%.2f", coefficient);
+                tempString = formattedValue + "x^";
+            }
+            if(exponent == 1 && !tempString.isEmpty()) {
                 tempString = tempString.substring(0, tempString.length() - 1);
             } else if(exponent == 0){
                 if(coefficient != 1) {
                     tempString = tempString.substring(0, tempString.length() - 2);
+                    if(coefficient == -1.0) {
+                        tempString += "1,00";
+                    }
                 } else {
-                    tempString = "1.0";
+                    tempString = "1,00";
                 }
             } else {
-                tempString += monome.getKey();
+                if(coefficient != 0) {
+                    tempString += monome.getKey().toString();
+                }
             }
             result.append(tempString);
             result.append("+");
         }
         //Remove last plus sign which leads to no term
-        result = new StringBuilder(result.substring(0, result.length() - 1));
+        if(!result.isEmpty()) {
+            result = new StringBuilder(result.substring(0, result.length() - 1));
+        }
         if(result.isEmpty()) {
             result.append("0");
         }

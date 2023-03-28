@@ -36,6 +36,8 @@ public class Operations {
                 try {
                     if (termParts[0].equals("")) {
                         coefficient = 1.0;
+                    } else if(termParts[0].equals("-")){
+                        coefficient = -1.0;
                     } else {
                         coefficient = Double.parseDouble(termParts[0]);
                     }
@@ -55,7 +57,6 @@ public class Operations {
                 } else {
                     try {
                         coefficient = Double.parseDouble(splitMonome);
-                        exponent = 0;
                     } catch(NumberFormatException numberFormatException) {
                         throw new ReadPolynomialException("Error parsing coefficient for 0 exponent term!");
                     }
@@ -108,6 +109,30 @@ public class Operations {
         // Subtract leftovers from p2
         for (Map.Entry<Integer, Double> monome : p2Monomes.entrySet()) {
             result.concatMonome(monome.getKey(), -1 * monome.getValue());
+        }
+        return result;
+    }
+
+    public Polynomial integratePolynomial(Polynomial p1) {
+        Polynomial result = new Polynomial();
+
+        for(Map.Entry<Integer, Double> monome : p1.getMonomes().entrySet()) {
+            if(monome.getValue() == 0) { //Skip over 0 coefficient terms if any
+                continue;
+            }
+            result.concatMonome(monome.getKey() + 1, monome.getValue() * 1 / (monome.getKey() + 1));
+        }
+        return result;
+    }
+
+    public Polynomial differentiatePolynomial(Polynomial p1) {
+        Polynomial result = new Polynomial();
+
+        for(Map.Entry<Integer, Double> monome : p1.getMonomes().entrySet()) {
+            if(monome.getValue() == 0 || monome.getKey() == 0) { //Skip over 0 coefficient or constant terms if any
+                continue;
+            }
+            result.concatMonome(monome.getKey() - 1, monome.getValue() * monome.getKey());
         }
         return result;
     }

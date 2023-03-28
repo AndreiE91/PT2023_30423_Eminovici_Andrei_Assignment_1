@@ -538,7 +538,7 @@ public class ViewMain extends JFrame {
 			labelLambo2.setVisible(false);
 			labelResultVisibility.setVisible(false);
 			labelTitle.setForeground(Color.BLACK);
-			labelPoly1.setForeground(Color.BLACK);
+			labelPoly1.setForeground(Color.DARK_GRAY);
 			stopClip();
 		}
 		stonkMode = !stonkMode;

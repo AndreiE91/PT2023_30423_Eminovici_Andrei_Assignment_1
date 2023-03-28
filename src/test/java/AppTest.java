@@ -15,7 +15,7 @@ public class AppTest {
         } catch (ReadPolynomialException e) {
             throw new RuntimeException(e);
         }
-        assertEquals("3.0x^2+2.0x-5.0", p.toString());
+        assertEquals("3,00x^2+2,00x-5,00", p.toString());
     }
 
     @Test
@@ -27,7 +27,7 @@ public class AppTest {
         } catch (ReadPolynomialException e) {
             throw new RuntimeException(e);
         }
-        assertEquals("3.0x^2+2.0x-5.0", p.toString());
+        assertEquals("3,00x^2+2,00x-5,00", p.toString());
     }
 
     @Test
@@ -39,7 +39,7 @@ public class AppTest {
         } catch (ReadPolynomialException e) {
             throw new RuntimeException(e);
         }
-        assertEquals("-3.0x^2-2.0x-5.0", p.toString());
+        assertEquals("-3,00x^2-2,00x-5,00", p.toString());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class AppTest {
         } catch (ReadPolynomialException e) {
             throw new RuntimeException(e);
         }
-        assertEquals("3.0x^2+2.0x-5.0", p.toString());
+        assertEquals("3,00x^2+2,00x-5,00", p.toString());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class AppTest {
         } catch (ReadPolynomialException e) {
             throw new RuntimeException(e);
         }
-        assertEquals("3.0x^2", p.toString());
+        assertEquals("3,00x^2", p.toString());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class AppTest {
         } catch (ReadPolynomialException e) {
             throw new RuntimeException(e);
         }
-        assertEquals("-3.0x^2", p.toString());
+        assertEquals("-3,00x^2", p.toString());
     }
 
     @Test
@@ -87,7 +87,7 @@ public class AppTest {
         } catch (ReadPolynomialException e) {
             throw new RuntimeException(e);
         }
-        assertEquals("-1.0", p.toString());
+        assertEquals("-1,00", p.toString());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class AppTest {
         } catch (ReadPolynomialException e) {
             throw new RuntimeException(e);
         }
-        assertEquals("1.0", p.toString());
+        assertEquals("1,00", p.toString());
     }
 
     @Test
@@ -127,7 +127,7 @@ public class AppTest {
         } catch (ReadPolynomialException e) {
             throw new RuntimeException(e);
         }
-        assertEquals("7.0x^2+3.0x+3.0", result.toString());
+        assertEquals("7,00x^2+3,00x+3,00", result.toString());
     }
 
     @Test
@@ -143,7 +143,7 @@ public class AppTest {
         } catch (ReadPolynomialException e) {
             throw new RuntimeException(e);
         }
-        assertEquals("3.0x^7+4.0x^2+3.0x+3.0", result.toString());
+        assertEquals("3,00x^7+4,00x^2+3,00x+3,00", result.toString());
     }
 
     @Test
@@ -159,7 +159,7 @@ public class AppTest {
         } catch (ReadPolynomialException e) {
             throw new RuntimeException(e);
         }
-        assertEquals("2.0x", result.toString());
+        assertEquals("2,00x", result.toString());
     }
 
     @Test
@@ -175,7 +175,7 @@ public class AppTest {
         } catch (ReadPolynomialException e) {
             throw new RuntimeException(e);
         }
-        assertEquals("2.0", result.toString());
+        assertEquals("2,00", result.toString());
     }
 
     @Test
@@ -191,7 +191,223 @@ public class AppTest {
         } catch (ReadPolynomialException e) {
             throw new RuntimeException(e);
         }
-        assertEquals("10.0x^10+3.0x^2+2.0x+3.0", result.toString());
+        assertEquals("10,00x^10+3,00x^2+2,00x+3,00", result.toString());
+    }
+
+    @Test
+    public void testSubtractionTailEx() {
+        Polynomial p1 = null;
+        Polynomial p2 = null;
+        Polynomial result = null;
+        try {
+            Operations operation = new Operations();
+            p1 = operation.readPolynomial("2x^2+x^6+x");
+            p2 = operation.readPolynomial("x");
+            result = operation.subtractPolynomials(p1, p2);
+        } catch (ReadPolynomialException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("x^6+2,00x^2", result.toString());
+    }
+    @Test
+    public void testSubtractionIdentical() {
+        Polynomial p1 = null;
+        Polynomial p2 = null;
+        Polynomial result = null;
+        try {
+            Operations operation = new Operations();
+            p1 = operation.readPolynomial("2x^2+x^6+x");
+            p2 = operation.readPolynomial("2x^2+x^6+x");
+            result = operation.subtractPolynomials(p1, p2);
+        } catch (ReadPolynomialException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("0", result.toString());
+    }
+    @Test
+    public void testSubtractionNegativeMiddleEx() {
+        Polynomial p1 = null;
+        Polynomial p2 = null;
+        Polynomial result = null;
+        try {
+            Operations operation = new Operations();
+            p1 = operation.readPolynomial("-2x^2-x^6+x");
+            p2 = operation.readPolynomial("-x^6");
+            result = operation.subtractPolynomials(p1, p2);
+        } catch (ReadPolynomialException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("-2,00x^2+x", result.toString());
+    }
+
+    @Test
+    public void testSubtractionConstants() {
+        Polynomial p1 = null;
+        Polynomial p2 = null;
+        Polynomial result = null;
+        try {
+            Operations operation = new Operations();
+            p1 = operation.readPolynomial("2");
+            p2 = operation.readPolynomial("2");
+            result = operation.subtractPolynomials(p1, p2);
+        } catch (ReadPolynomialException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("0", result.toString());
+    }
+
+    @Test
+    public void testSubtractionExx() {
+        Polynomial p1 = null;
+        Polynomial p2 = null;
+        Polynomial result = null;
+        try {
+            Operations operation = new Operations();
+            p1 = operation.readPolynomial("x");
+            p2 = operation.readPolynomial("x");
+            result = operation.subtractPolynomials(p1, p2);
+        } catch (ReadPolynomialException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("0", result.toString());
+    }
+
+    @Test
+    public void testIntegrationBasic() {
+        Polynomial p1 = null;
+        Polynomial result = null;
+        try {
+            Operations operation = new Operations();
+            p1 = operation.readPolynomial("x^2+2x+1");
+            result = operation.integratePolynomial(p1);
+        } catch (ReadPolynomialException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("0,33x^3+x^2+x", result.toString());
+    }
+
+    @Test
+    public void testIntegrationSmall() {
+        Polynomial p1 = null;
+        Polynomial result = null;
+        try {
+            Operations operation = new Operations();
+            p1 = operation.readPolynomial("1");
+            result = operation.integratePolynomial(p1);
+        } catch (ReadPolynomialException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("x", result.toString());
+    }
+    @Test
+    public void testIntegrationBig() {
+        Polynomial p1 = null;
+        Polynomial result = null;
+        try {
+            Operations operation = new Operations();
+            p1 = operation.readPolynomial("100x^100");
+            result = operation.integratePolynomial(p1);
+        } catch (ReadPolynomialException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("0,99x^101", result.toString());
+    }
+    @Test
+    public void testIntegrationZero() {
+        Polynomial p1 = null;
+        Polynomial result = null;
+        try {
+            Operations operation = new Operations();
+            p1 = operation.readPolynomial("0");
+            result = operation.integratePolynomial(p1);
+        } catch (ReadPolynomialException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("0", result.toString());
+    }
+
+    @Test
+    public void testIntegrationNegative() {
+        Polynomial p1 = null;
+        Polynomial result = null;
+        try {
+            Operations operation = new Operations();
+            p1 = operation.readPolynomial("-4x^2");
+            result = operation.integratePolynomial(p1);
+        } catch (ReadPolynomialException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("-1,33x^3", result.toString());
+    }
+
+    @Test
+    public void testDifferentiationBasic() {
+        Polynomial p1 = null;
+        Polynomial result = null;
+        try {
+            Operations operation = new Operations();
+            p1 = operation.readPolynomial("2x^2+3x+2");
+            result = operation.differentiatePolynomial(p1);
+        } catch (ReadPolynomialException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("4,00x+3,00", result.toString());
+    }
+
+    @Test
+    public void testDifferentiationEx() {
+        Polynomial p1 = null;
+        Polynomial result = null;
+        try {
+            Operations operation = new Operations();
+            p1 = operation.readPolynomial("3x");
+            result = operation.differentiatePolynomial(p1);
+        } catch (ReadPolynomialException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("3,00", result.toString());
+    }
+
+    @Test
+    public void testDifferentiationConstant() {
+        Polynomial p1 = null;
+        Polynomial result = null;
+        try {
+            Operations operation = new Operations();
+            p1 = operation.readPolynomial("2");
+            result = operation.differentiatePolynomial(p1);
+        } catch (ReadPolynomialException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("0", result.toString());
+    }
+
+    @Test
+    public void testDifferentiationZero() {
+        Polynomial p1 = null;
+        Polynomial result = null;
+        try {
+            Operations operation = new Operations();
+            p1 = operation.readPolynomial("0");
+            result = operation.differentiatePolynomial(p1);
+        } catch (ReadPolynomialException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("0", result.toString());
+    }
+
+    @Test
+    public void testDifferentiationNegative() {
+        Polynomial p1 = null;
+        Polynomial result = null;
+        try {
+            Operations operation = new Operations();
+            p1 = operation.readPolynomial("-3x^4-2");
+            result = operation.differentiatePolynomial(p1);
+        } catch (ReadPolynomialException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("-12,00x^3", result.toString());
     }
 }
 
