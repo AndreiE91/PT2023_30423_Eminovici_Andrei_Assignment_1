@@ -186,13 +186,35 @@ public class CalculatorController {
                 if(ViewMain.isStonkMode()) {
                     ViewMain.playSound("hitButton.wav");
                 }
+                Operations operations = new Operations();
+                if(view.getTextAreaPoly1().getText().isEmpty()) {
+                    throw new NullInputException("Empty input text");
+                }
+                Polynomial p1 = operations.readPolynomial(view.getTextAreaPoly1().getText());
 
+                Polynomial integrationResult = operations.integratePolynomial(p1);
+
+
+                view.getTextAreaResult().setText(integrationResult.toString());
+
+            }
+            catch (ReadPolynomialException readEx) {
+                if(ViewMain.isStonkMode()) {
+                    ViewMain.playSound("error.wav");
+                }
+                view.showErrorMessage("Error reading polynomial!");
+            }
+            catch(NullInputException nullInputException) {
+                if(ViewMain.isStonkMode()) {
+                    ViewMain.playSound("error.wav");
+                }
+                view.showErrorMessage(nullInputException.getMessage());
             }
             catch (Exception ex) {
                 if(ViewMain.isStonkMode()) {
                     ViewMain.playSound("error.wav");
                 }
-                view.showErrorMessage("Error!");
+                view.showErrorMessage("An uncategorized error has occured!");
             }
         }
     }
@@ -205,13 +227,35 @@ public class CalculatorController {
                 if(ViewMain.isStonkMode()) {
                     ViewMain.playSound("hitButton.wav");
                 }
+                Operations operations = new Operations();
+                if(view.getTextAreaPoly1().getText().isEmpty()) {
+                    throw new NullInputException("Empty input text");
+                }
+                Polynomial p2 = operations.readPolynomial(view.getTextAreaPoly2().getText());
 
+                Polynomial integrationResult = operations.integratePolynomial(p2);
+
+
+                view.getTextAreaResult().setText(integrationResult.toString());
+
+            }
+            catch (ReadPolynomialException readEx) {
+                if(ViewMain.isStonkMode()) {
+                    ViewMain.playSound("error.wav");
+                }
+                view.showErrorMessage("Error reading polynomial!");
+            }
+            catch(NullInputException nullInputException) {
+                if(ViewMain.isStonkMode()) {
+                    ViewMain.playSound("error.wav");
+                }
+                view.showErrorMessage(nullInputException.getMessage());
             }
             catch (Exception ex) {
                 if(ViewMain.isStonkMode()) {
                     ViewMain.playSound("error.wav");
                 }
-                view.showErrorMessage("Error!");
+                view.showErrorMessage("An uncategorized error has occured!");
             }
         }
     }
@@ -224,13 +268,35 @@ public class CalculatorController {
                 if(ViewMain.isStonkMode()) {
                     ViewMain.playSound("hitButton.wav");
                 }
+                Operations operations = new Operations();
+                if(view.getTextAreaPoly1().getText().isEmpty()) {
+                    throw new NullInputException("Empty input text");
+                }
+                Polynomial p1 = operations.readPolynomial(view.getTextAreaPoly1().getText());
 
+                Polynomial differentiationResult = operations.differentiatePolynomial(p1);
+
+
+                view.getTextAreaResult().setText(differentiationResult.toString());
+
+            }
+            catch (ReadPolynomialException readEx) {
+                if(ViewMain.isStonkMode()) {
+                    ViewMain.playSound("error.wav");
+                }
+                view.showErrorMessage("Error reading polynomial!");
+            }
+            catch(NullInputException nullInputException) {
+                if(ViewMain.isStonkMode()) {
+                    ViewMain.playSound("error.wav");
+                }
+                view.showErrorMessage(nullInputException.getMessage());
             }
             catch (Exception ex) {
                 if(ViewMain.isStonkMode()) {
                     ViewMain.playSound("error.wav");
                 }
-                view.showErrorMessage("Error!");
+                view.showErrorMessage("An uncategorized error has occured!");
             }
         }
     }
@@ -243,13 +309,35 @@ public class CalculatorController {
                 if(ViewMain.isStonkMode()) {
                     ViewMain.playSound("hitButton.wav");
                 }
+                Operations operations = new Operations();
+                if(view.getTextAreaPoly1().getText().isEmpty()) {
+                    throw new NullInputException("Empty input text");
+                }
+                Polynomial p2 = operations.readPolynomial(view.getTextAreaPoly2().getText());
 
+                Polynomial differentiationResult = operations.differentiatePolynomial(p2);
+
+
+                view.getTextAreaResult().setText(differentiationResult.toString());
+
+            }
+            catch (ReadPolynomialException readEx) {
+                if(ViewMain.isStonkMode()) {
+                    ViewMain.playSound("error.wav");
+                }
+                view.showErrorMessage("Error reading polynomial!");
+            }
+            catch(NullInputException nullInputException) {
+                if(ViewMain.isStonkMode()) {
+                    ViewMain.playSound("error.wav");
+                }
+                view.showErrorMessage(nullInputException.getMessage());
             }
             catch (Exception ex) {
                 if(ViewMain.isStonkMode()) {
                     ViewMain.playSound("error.wav");
                 }
-                view.showErrorMessage("Error!");
+                view.showErrorMessage("An uncategorized error has occured!");
             }
         }
     }
