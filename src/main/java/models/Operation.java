@@ -1,16 +1,15 @@
 package models;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.regex.*;
+import java.util.*;
+
 import static java.lang.Math.max;
 
-public class Operations {
+public class Operation {
 
     public Polynomial readPolynomial(String input) throws ReadPolynomialException{
         Polynomial result = new Polynomial();
+
+        input = input.replaceAll("X", "x");
         //First and foremost remove any spaces because that can and WILL cause problems
         if(input.contains(" ")) {
             input = input.replace(" ", "");
@@ -136,4 +135,55 @@ public class Operations {
         }
         return result;
     }
+
+    public Polynomial multiplyPolynomials(Polynomial p1, Polynomial p2) {
+        Polynomial result = new Polynomial(); // Final result
+        ArrayList<Polynomial> intermediateResults = new ArrayList<>();
+
+        for(Map.Entry<Integer, Double> monome_p1 : p1.getMonomes().entrySet()) {
+            Polynomial tempResult = new Polynomial(); // Intermediate result for storing all permutations of a term with all the others
+            for(Map.Entry<Integer, Double> monome_p2 : p2.getMonomes().entrySet()) {
+                //Create a list of intermediate results for storing each permutation of the multiplication steps
+                tempResult.concatMonome(monome_p1.getKey() + monome_p2.getKey(), monome_p1.getValue() * monome_p2.getValue());
+            }
+            intermediateResults.add(tempResult);
+        }
+        //Add all of the intermediate result polynomials for the final solution
+        Operation operations = new Operation();
+        for(Polynomial tempResult : intermediateResults) {
+            result = operations.addPolynomials(result, tempResult);
+        }
+        return result;
+    }
+
+    public Polynomial dividePolynomials(Polynomial p1, Polynomial p2) throws ArithmeticException {
+        if (p2.getDegree() == 0 && p2.getMonomes().get(0) == 0.0) {
+            throw new ArithmeticException("Division by zero");
+        }
+
+        Polynomial remainder = new Polynomial(); // Rest
+        Polynomial result = new Polynomial();
+        remainder.setMonomes(p1.getMonomes()); // Rest equal to dividend initially
+        remainder.setDegree(p1.getDegree());
+
+
+        // As long as p2 "fits" into remainder and remainder is not empty, keep going
+        while (remainder.getDegree() >= p2.getDegree() && !remainder.getMonomes().isEmpty()) {
+            // Compute difference of exponents and divide coefficients for constructing the term
+            int expDiff = remainder.getDegree() - p2.getDegree();
+            double coef = remainder.getMonomes().get(remainder.getDegree()) / p2.getMonomes().get(p2.getDegree());
+            Polynomial quotient = new Polynomial();
+            quotient.concatMonome(expDiff, coef); // Create the quotient
+
+            result = addPolynomials(result, quotient); // Add the division quotient to the final result
+            Polynomial term = multiplyPolynomials(p2, quotient); // Multiply divisor by quotient and subtract it from remainder
+
+            remainder = subtractPolynomials(remainder, term);
+            if(remainder.getDegree() == 0 && p2.getDegree() == 0) { // Avoid endless loop by terminating if both p1 and p2 are constants
+                break;
+            }
+        }
+        return result;
+    }
+
 }

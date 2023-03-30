@@ -3,17 +3,14 @@ package controllers;
 import models.*;
 import views.*;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CalculatorController {
     private ViewMain view;
-    private CalculatorMain calculatorMain;
-
-    public CalculatorController(ViewMain view, CalculatorMain calculatorMain) {
+    public CalculatorController(ViewMain view) {
         this.view = view;
-
-        this.calculatorMain = calculatorMain;
 
         this.view.addAdditionListener(new AdditionListener());
         this.view.addSubtractionListener(new SubtractionListener());
@@ -25,21 +22,21 @@ public class CalculatorController {
         this.view.addDifferentiateP2Listener(new DifferentiateP2Listener());
         this.view.addClearP1Listener(e -> {
             if(ViewMain.isStonkMode()) {
-                ViewMain.playSound("hitButton.wav");
+                ViewMain.playSound("hitSmall.wav");
             }
                     this.view.getTextAreaPoly1().setText(null);
             }
         );
         this.view.addClearP2Listener(e -> {
             if(ViewMain.isStonkMode()) {
-                ViewMain.playSound("hitButton.wav");
+                ViewMain.playSound("hitSmall.wav");
             }
                     this.view.getTextAreaPoly2().setText(null);
             }
         );
         this.view.addSwapOrderListener(e -> {
             if(ViewMain.isStonkMode()) {
-                ViewMain.playSound("hitButton.wav");
+                ViewMain.playSound("hitSmall.wav");
             }
 
             String temp = this.view.getTextAreaPoly1().getText();
@@ -48,7 +45,7 @@ public class CalculatorController {
             }
         );
         this.view.addStonkListener(e -> {
-                    ViewMain.playSound("hitButton.wav");
+                    ViewMain.playSound("hitSmall.wav");
                     this.view.playClip("money.wav");
                     this.view.setStonkMode(!ViewMain.isStonkMode());
         }
@@ -62,9 +59,10 @@ public class CalculatorController {
 
             try {
                 if(ViewMain.isStonkMode()) {
-                    ViewMain.playSound("hitButton.wav");
+                    view.buttonClickGif();
+                    ViewMain.playSound("hitButton.wav", 500);
                 }
-                Operations operations = new Operations();
+                Operation operations = new Operation();
                 if(view.getTextAreaPoly1().getText().isEmpty() || view.getTextAreaPoly2().getText().isEmpty()) {
                     throw new NullInputException("Empty input text");
                 }
@@ -74,8 +72,13 @@ public class CalculatorController {
 
                 Polynomial additionResult = operations.addPolynomials(p1, p2);
 
-
-                view.getTextAreaResult().setText(additionResult.toString());
+                if(ViewMain.isStonkMode()) {
+                    Timer timer = new Timer(500, f -> view.getTextAreaResult().setText(additionResult.toString()));
+                    timer.setRepeats(false);
+                    timer.start();
+                } else {
+                    view.getTextAreaResult().setText(additionResult.toString());
+                }
             }
             catch (ReadPolynomialException readEx) {
                 if(ViewMain.isStonkMode()) {
@@ -104,9 +107,10 @@ public class CalculatorController {
 
             try {
                 if(ViewMain.isStonkMode()) {
-                    ViewMain.playSound("hitButton.wav");
+                    view.buttonClickGif();
+                    ViewMain.playSound("hitButton.wav", 500);
                 }
-                Operations operations = new Operations();
+                Operation operations = new Operation();
                 if(view.getTextAreaPoly1().getText().isEmpty() || view.getTextAreaPoly2().getText().isEmpty()) {
                     throw new NullInputException("Empty input text");
                 }
@@ -116,8 +120,13 @@ public class CalculatorController {
 
                 Polynomial subtractionResult = operations.subtractPolynomials(p1, p2);
 
-
-                view.getTextAreaResult().setText(subtractionResult.toString());
+                if(ViewMain.isStonkMode()) {
+                    Timer timer = new Timer(500, f -> view.getTextAreaResult().setText(subtractionResult.toString()));
+                    timer.setRepeats(false);
+                    timer.start();
+                } else {
+                    view.getTextAreaResult().setText(subtractionResult.toString());
+                }
             }
             catch (ReadPolynomialException readEx) {
                 if(ViewMain.isStonkMode()) {
@@ -146,15 +155,44 @@ public class CalculatorController {
 
             try {
                 if(ViewMain.isStonkMode()) {
-                    ViewMain.playSound("hitButton.wav");
+                    view.buttonClickGif();
+                    ViewMain.playSound("hitButton.wav", 500);
                 }
+                Operation operations = new Operation();
+                if(view.getTextAreaPoly1().getText().isEmpty() || view.getTextAreaPoly2().getText().isEmpty()) {
+                    throw new NullInputException("Empty input text");
+                }
+                Polynomial p1 = operations.readPolynomial(view.getTextAreaPoly1().getText());
 
+                Polynomial p2 = operations.readPolynomial(view.getTextAreaPoly2().getText());
+
+                Polynomial multiplicationResult = operations.multiplyPolynomials(p1, p2);
+
+                if(ViewMain.isStonkMode()) {
+                    Timer timer = new Timer(500, f -> view.getTextAreaResult().setText(multiplicationResult.toString()));
+                    timer.setRepeats(false);
+                    timer.start();
+                } else {
+                    view.getTextAreaResult().setText(multiplicationResult.toString());
+                }
+            }
+            catch (ReadPolynomialException readEx) {
+                if(ViewMain.isStonkMode()) {
+                    ViewMain.playSound("error.wav");
+                }
+                view.showErrorMessage("Error reading polynomial!");
+            }
+            catch(NullInputException nullInputException) {
+                if(ViewMain.isStonkMode()) {
+                    ViewMain.playSound("error.wav");
+                }
+                view.showErrorMessage(nullInputException.getMessage());
             }
             catch (Exception ex) {
                 if(ViewMain.isStonkMode()) {
                     ViewMain.playSound("error.wav");
                 }
-                view.showErrorMessage("Error!");
+                view.showErrorMessage("An uncategorized error has occured!");
             }
         }
     }
@@ -165,15 +203,50 @@ public class CalculatorController {
 
             try {
                 if(ViewMain.isStonkMode()) {
-                    ViewMain.playSound("hitButton.wav");
+                    view.buttonClickGif();
+                    ViewMain.playSound("hitButton.wav", 500);
                 }
+                Operation operations = new Operation();
+                if(view.getTextAreaPoly1().getText().isEmpty() || view.getTextAreaPoly2().getText().isEmpty()) {
+                    throw new NullInputException("Empty input text");
+                }
+                Polynomial p1 = operations.readPolynomial(view.getTextAreaPoly1().getText());
 
+                Polynomial p2 = operations.readPolynomial(view.getTextAreaPoly2().getText());
+
+                Polynomial divisionResult = operations.dividePolynomials(p1, p2);
+
+                if(ViewMain.isStonkMode()) {
+                    Timer timer = new Timer(500, f -> view.getTextAreaResult().setText(divisionResult.toString()));
+                    timer.setRepeats(false);
+                    timer.start();
+                } else {
+                    view.getTextAreaResult().setText(divisionResult.toString());
+                }
+            }
+            catch (ReadPolynomialException readEx) {
+                if(ViewMain.isStonkMode()) {
+                    ViewMain.playSound("error.wav");
+                }
+                view.showErrorMessage("Error reading polynomial!");
+            }
+            catch(NullInputException nullInputException) {
+                if(ViewMain.isStonkMode()) {
+                    ViewMain.playSound("error.wav");
+                }
+                view.showErrorMessage(nullInputException.getMessage());
+            }
+            catch (ArithmeticException ex) {
+                if(ViewMain.isStonkMode()) {
+                    ViewMain.playSound("error.wav");
+                }
+                view.showErrorMessage(ex.getMessage());
             }
             catch (Exception ex) {
                 if(ViewMain.isStonkMode()) {
                     ViewMain.playSound("error.wav");
                 }
-                view.showErrorMessage("Error!");
+                view.showErrorMessage("An uncategorized error has occured!");
             }
         }
     }
@@ -184,9 +257,10 @@ public class CalculatorController {
 
             try {
                 if(ViewMain.isStonkMode()) {
-                    ViewMain.playSound("hitButton.wav");
+                    view.buttonClickGif();
+                    ViewMain.playSound("hitButton.wav", 500);
                 }
-                Operations operations = new Operations();
+                Operation operations = new Operation();
                 if(view.getTextAreaPoly1().getText().isEmpty()) {
                     throw new NullInputException("Empty input text");
                 }
@@ -194,8 +268,13 @@ public class CalculatorController {
 
                 Polynomial integrationResult = operations.integratePolynomial(p1);
 
-
-                view.getTextAreaResult().setText(integrationResult.toString());
+                if(ViewMain.isStonkMode()) {
+                    Timer timer = new Timer(500, f -> view.getTextAreaResult().setText(integrationResult.toString()));
+                    timer.setRepeats(false);
+                    timer.start();
+                } else {
+                    view.getTextAreaResult().setText(integrationResult.toString());
+                }
 
             }
             catch (ReadPolynomialException readEx) {
@@ -225,9 +304,10 @@ public class CalculatorController {
 
             try {
                 if(ViewMain.isStonkMode()) {
-                    ViewMain.playSound("hitButton.wav");
+                    view.buttonClickGif();
+                    ViewMain.playSound("hitButton.wav", 500);
                 }
-                Operations operations = new Operations();
+                Operation operations = new Operation();
                 if(view.getTextAreaPoly1().getText().isEmpty()) {
                     throw new NullInputException("Empty input text");
                 }
@@ -235,9 +315,13 @@ public class CalculatorController {
 
                 Polynomial integrationResult = operations.integratePolynomial(p2);
 
-
-                view.getTextAreaResult().setText(integrationResult.toString());
-
+                if(ViewMain.isStonkMode()) {
+                    Timer timer = new Timer(500, f -> view.getTextAreaResult().setText(integrationResult.toString()));
+                    timer.setRepeats(false);
+                    timer.start();
+                } else {
+                    view.getTextAreaResult().setText(integrationResult.toString());
+                }
             }
             catch (ReadPolynomialException readEx) {
                 if(ViewMain.isStonkMode()) {
@@ -266,9 +350,10 @@ public class CalculatorController {
 
             try {
                 if(ViewMain.isStonkMode()) {
-                    ViewMain.playSound("hitButton.wav");
+                    view.buttonClickGif();
+                    ViewMain.playSound("hitButton.wav", 500);
                 }
-                Operations operations = new Operations();
+                Operation operations = new Operation();
                 if(view.getTextAreaPoly1().getText().isEmpty()) {
                     throw new NullInputException("Empty input text");
                 }
@@ -276,8 +361,13 @@ public class CalculatorController {
 
                 Polynomial differentiationResult = operations.differentiatePolynomial(p1);
 
-
-                view.getTextAreaResult().setText(differentiationResult.toString());
+                if(ViewMain.isStonkMode()) {
+                    Timer timer = new Timer(500, f -> view.getTextAreaResult().setText(differentiationResult.toString()));
+                    timer.setRepeats(false);
+                    timer.start();
+                } else {
+                    view.getTextAreaResult().setText(differentiationResult.toString());
+                }
 
             }
             catch (ReadPolynomialException readEx) {
@@ -307,9 +397,10 @@ public class CalculatorController {
 
             try {
                 if(ViewMain.isStonkMode()) {
-                    ViewMain.playSound("hitButton.wav");
+                    view.buttonClickGif();
+                    ViewMain.playSound("hitButton.wav", 500);
                 }
-                Operations operations = new Operations();
+                Operation operations = new Operation();
                 if(view.getTextAreaPoly1().getText().isEmpty()) {
                     throw new NullInputException("Empty input text");
                 }
@@ -317,9 +408,13 @@ public class CalculatorController {
 
                 Polynomial differentiationResult = operations.differentiatePolynomial(p2);
 
-
-                view.getTextAreaResult().setText(differentiationResult.toString());
-
+                if(ViewMain.isStonkMode()) {
+                    Timer timer = new Timer(500, f -> view.getTextAreaResult().setText(differentiationResult.toString()));
+                    timer.setRepeats(false);
+                    timer.start();
+                } else {
+                    view.getTextAreaResult().setText(differentiationResult.toString());
+                }
             }
             catch (ReadPolynomialException readEx) {
                 if(ViewMain.isStonkMode()) {

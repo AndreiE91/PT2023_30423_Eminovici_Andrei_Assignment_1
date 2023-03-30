@@ -5,30 +5,23 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class Polynomial  {
-    private String name;
     //Use a treeMap as it maintains a sorted order. The idea is to have a list of sorted exponents for iterating through them later
     //Each exponent is linked to a coefficient
     private TreeMap<Integer, Double> monomes;
 
-    public Polynomial(String name) {
-        this.name = name;
-        this.monomes = new TreeMap<Integer, Double>(Collections.reverseOrder());
-    }
-
-    public Polynomial(TreeMap<Integer, Double> monomes) {
-        this.monomes = monomes;
-    }
+    private int degree;
 
     public Polynomial() {
         this.monomes = new TreeMap<Integer, Double>(Collections.reverseOrder());
+        this.degree = 0;
     }
 
-    public String getName() {
-        return name;
+    public int getDegree() {
+        return degree;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDegree(int degree) {
+        this.degree = degree;
     }
 
     public TreeMap<Integer, Double> getMonomes() {
@@ -41,6 +34,10 @@ public class Polynomial  {
 
     public void concatMonome(int exponent, double coefficient) {
         monomes.put(exponent, coefficient);
+
+        if(degree < exponent && coefficient != 0) {
+            degree = exponent;
+        }
     }
 
     public String toString() {
@@ -52,8 +49,6 @@ public class Polynomial  {
                 result.append("+");
                 continue;
             }
-//            System.out.println(coefficient);
-//            System.out.println(exponent);
 
             //Remove plus sign if negative term
             if(coefficient <= 0 && !result.isEmpty()) {

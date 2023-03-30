@@ -11,7 +11,10 @@ import javax.swing.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageProducer;
 import java.io.File;
 
 public class ViewMain extends JFrame {
@@ -51,6 +54,8 @@ public class ViewMain extends JFrame {
 	private JButton buttonDifferentiateP2 = new JButton("Differentiate P2");
 	private JButton buttonStonkMode = new JButton("Stonk: OFF");
 	private static boolean stonkMode = false;
+	private ImageIcon imageIcon = new ImageIcon("animation.gif");
+	private JLabel imageLabel = new JLabel();
 
 
 	public ViewMain() {
@@ -59,7 +64,14 @@ public class ViewMain extends JFrame {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 
+		imageLabel.setIcon(imageIcon);
+		imageLabel.setSize(imageIcon.getIconWidth(), imageIcon.getIconHeight());
+		getContentPane().add(imageLabel);
+		imageLabel.setLocation(470, 235);
+		imageLabel.setVisible(false);
+
 		frame.getContentPane().setLayout(null);
+		frame.getContentPane().add(imageLabel);
 		frame.getContentPane().add(labelTitle);
 		frame.getContentPane().add(buttonStonkMode);
 		frame.getContentPane().add(labelDescription0);
@@ -87,7 +99,6 @@ public class ViewMain extends JFrame {
 		frame.getContentPane().add(labelLambo);
 		frame.getContentPane().add(labelResultVisibility);
 		frame.getContentPane().add(labelLambo2);
-
 
 		labelTitle.setBounds(40, 33, 436, 51);
 		labelTitle.setFont(new Font("Vivaldi", Font.BOLD, 50));
@@ -544,6 +555,23 @@ public class ViewMain extends JFrame {
 		stonkMode = !stonkMode;
 	}
 
+	public static void playSound(String soundFile, int millisecondsDelay) {
+		try {
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundFile).getAbsoluteFile());
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioInputStream);
+
+			// Create a timer to delay the start of the clip
+			Timer timer = new Timer(millisecondsDelay, e -> clip.start());
+			timer.setRepeats(false);
+			timer.start();
+		} catch (Exception ex) {
+			System.out.println("Error playing sound.");
+			ex.printStackTrace();
+		}
+	}
+
+
 	public static void playSound(String soundFile) {
 		try {
 			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundFile).getAbsoluteFile());
@@ -555,6 +583,7 @@ public class ViewMain extends JFrame {
 			ex.printStackTrace();
 		}
 	}
+
 
 	public void playClip(String soundFile) {
 		try {
@@ -577,5 +606,15 @@ public class ViewMain extends JFrame {
 		if (clip != null && clip.isRunning()) {
 			clip.stop();
 		}
+	}
+
+	public void buttonClickGif() {
+		// Start the animation and make the label visible
+		imageLabel.setVisible(true);
+
+		// Schedule a task to hide the label after the animation has finished
+		Timer timer = new Timer(1000, e -> imageLabel.setVisible(false));
+		timer.setRepeats(false);
+		timer.start();
 	}
 }
