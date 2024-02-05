@@ -6,7 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="PT2023_30423_Eminovici_Andrei_Assignment_1" />
+        <module name="Polynomial Calculator" />
       </profile>
     </annotationProcessing>
   </component>
